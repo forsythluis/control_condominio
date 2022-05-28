@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {# cargando la libreria #}
+        {% load bootstrap5 %}
+        
+        {#cargando CSS Bootstrap #}
+        {% bootstrap_css %}
+        
+        {# Archivos #}
+        {% load static %}
+        
+        <style>
+          
+          .crear {
+          float: right;
+          margin: 30px 60px 30px 0px;
+          }
+          
+          .titulo{
+            text-align: center;
+            margin: 60px 0px 60px 0px;
+          }
+           
+        </style>
+    </head>
+    <body>
+    
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'logout' %}"><h3>Salir</h3></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  
+      {% if messages %}
+      
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+     {% endif %}
+      
+    {% if user.is_authenticated %}
+      
+      <div class = "titulo"><h2>Bienvenido Administrador<strong>  {{user.username}} </strong></h2></div>
+      
+      {% if cantidad < 20 %}
+        <div class = 'crear'> <a href="crear" title = "crear" type="button" class = "btn btn-success">Crear Nuevo Propietario</a></div>  
+      {% endif %}
+        <form action = 'saldos' method = 'POST'>
+            {% csrf_token %}
+            <input type = 'number' name = 'saldos' >            
+            <td><input type = 'submit' name = 'enviar' value = 'Ingresar Monto Total Mes' class = "btn btn-info"></td>
+        </form>   
+   
+      <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Nombre</th>
+              <th>Apartamento</th>
+              <th>Piso</th>
+              <th>Monto</th>
+              <th>Canceló Mes</th>
+              <th>Alicuota</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          
+            {% for item in page_obj %}
+                
+              <tbody> 
+                <tr>
+                  <td>{{item.cedula}}</td>
+                  <td>{{item.nombre}}</td>
+                  <td>{{item.apartamento}}</td>
+                  <td>{{item.piso}}</td>
+                  <td>{{item.monto}}</td>
+                  <td>{{item.cancelar}}</td>
+                  <td>{{item.alicuota}}</td>
+                  <td>
+                    <form action = "elimina/{{item.id}}" method = "GET">
+                      {% csrf_token %}
+                      <div class="btn-group">          
+                          <a href="/detalle/{{item.id}}" title = "Ver" type="button" class = "btn btn-info">Ver</a> 
+                          <a href="/actualiza/{{item.id}}" title = "Actualizar" type="button" class = "btn btn-primary">Actualizar</a>
+                          <a href="/elimina/{{item.id}}" title = "Actualizar" type="button" class = "btn btn-danger">Eliminar</a>
+                      </div>
+                    </form>
+                  </td>  
+                </tr>        
+            {% endfor %} 
+            </tbody>
+      </table>                   
+    {% endif %}
+    
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item  ">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+        </li>
+      {% endif %} 
+       
+      {% for page in page_obj.paginator.page_range %}
+       
+        <li class = "page-item {% if page_obj.number == page %}active{% endif %}"><a class="page-link" href = "?page={{page}}">{{page}}</a></li>
+      {% endfor %}
+        
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+        </li>
+      {% endif %}
+      </ul>
+    </nav>
+    {% bootstrap_javascript %}
+    <script src="" async defer></script>
+    </body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Slide Navbar</title>
+	<link rel="stylesheet" type="text/css" href="slide navbar style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+        {# cargando la libreria #}
+        {% load bootstrap5 %}
+        
+        {#cargando CSS Bootstrap #}
+        {% bootstrap_css %}
+        
+        {% load widget_tweaks %}
+        
+        {# Archivos #}
+        {% load static %}
+
+<style>
+   body{
+   	margin: 0;
+   	padding: 0;
+   	text-align: center;
+   	color: white;
+   	display: flex;
+   	justify-content: center;
+   	align-items: center;
+   	min-height: 100vh;
+   	font-family: 'Jost', sans-serif;
+   	background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+   }
+   .main{
+   	width: 350px;
+   	height: 600px;
+   	background: red;
+   	overflow: hidden;
+   	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+   	border-radius: 10px;
+   	box-shadow: 5px 20px 50px #000;
+   }
+   
+   button{
+   	width: 60%;
+   	height: 40px;
+   	margin: 10px auto;
+   	justify-content: center;
+   	display: block;
+   	color: #fff;
+   	background: white;
+   	font-size: 1em;
+   	font-weight: bold;
+   	margin-top: 20px;
+   	outline: none;
+   	border: none;
+   	border-radius: 5px;
+   	transition: .2s ease-in;
+   	cursor: pointer;
+   	
+   }
+   button:hover{
+   	background: #6d44b8;
+   }
+   
+   .login{
+     margin-top: 100px;
+   
+   
+   }
+   
+   .registro{
+     margin-top: 100px;
+   
+   
+   }
+
+</style>
+</head>
+<body>
+    
+<div class="main"> 
+	 <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 contents">
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
+                        <div class="form-block">
+                            <div class="mb-4">
+                        	    <div class="">
+                                    <h1>Bienvenido Usuario </h1>   
+                                </div>
+                                <div class="login">
+                                    <button class="button">
+                                    <a href="{% url 'login' %}">login</a>
+                                    </button>
+                                </div> 
+                                <div class="registro">
+                        		    <button class="button">
+                                        <a href="{% url 'register' %}">register</a>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      
+    {% if messages %} 
+   
+   <div class="alert alert-warning alert-dismissible fade show" role="alert">
+       
+       {% for message in messages %}             
+       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                           
+       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+       {% endfor %}
+   </div>
+   
+   {% endif %} 
+ 
+</div>         
+
+</body>
+</html>
+    
+    
+    
+    
+    
+    {% comment %} <div align="left" class="btn_crear mb-3">
+            <a href = "crear" type="button" class="btn btn-primary">Crear</a>
+    </div>   
+      
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Apartamento</th>
+                    <th>Piso</th>
+                    <th>Monto</th>
+                    <th>Canceló Mes</th>
+                    <th>Alicuota</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            
+            
+            <tbody>
+            {% if request.user.is_superuser %}
+               
+               
+                 bienvenido <strong>{{user.username}}</strong>
+                
+                {% for propietario in propietarios %}
+                  <tr>
+                     <td>{{propietario.cedula}}</td>
+                     <td>{{propietario.nombre}}</td>
+                     <td>{{propietario.apartamento}}</td>
+                     <td>{{propietario.piso}}</td>
+                     <td>{{propietario.monto}}</td>
+                     <td>{{propietario.cancelar}}</td>
+                     <td>{{propietario.alicuota}}</td>
+                     <td>
+                        <form action = "elimina/{{propietario.id}}" method = "GET">
+                            {% csrf_token %}
+                            <div class="btn-group">
+                                <a href="detalle/{{propietario.id}}" title = "Ver" type="button" class = "btn btn-success">Ver</a>
+                                <a href="edita/{{propietario.id}}" title = "Actualizar" type="button" class = "btn btn-primary">Actualizar</a>
+                                <button class="btn btn-danger" onclick="return eliminar()" type="submit">Eliminar</button>
+                            </div>
+                        </form>
+                     </td>  
+                    </tr> 
+                 {% endfor %} 
+               
+            {% else %}
+            
+                <H1>HOLA {{user.username}}</H1>
+                <form action = "{% url 'muestra' %}" method = "POST">
+                    {% csrf_token %}
+                    <input  type = "number" name = "cedula" >
+                    <button type = "submit" name = "enviar">Enviar</button>
+                </form>    
+            {% endif %}
+             </tbody>
+        </table> {% endcomment %}
+        
+        
+         
+        
+        {# JS y Jquery Bootstrap #}
+        {% comment %} {% bootstrap_javascript %}
+        <script src="" async defer></script>
+    </body>
+</html> {% endcomment %}

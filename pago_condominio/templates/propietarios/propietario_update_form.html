@@ -1,0 +1,94 @@
+
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {# cargando la libreria #}
+        {% load bootstrap5 %}
+        
+        {#cargando CSS Bootstrap #}
+        {% bootstrap_css %}
+        
+        {# Archivos #}
+        {% load static %}
+        
+        <style>
+          
+        body{
+          	margin: 0;
+          	padding: 0;
+          	display: flex;
+          	justify-content: center;
+          	align-items: center;
+          	min-height: 100vh;
+          	font-family: 'Jost', sans-serif;
+          	background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+          }
+          .main{
+          	width: 350px;
+          	height: 500px;
+          	background: red;
+          	overflow: hidden;
+          	background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;
+          	border-radius: 10px;
+          	box-shadow: 5px 20px 50px #000;
+          }
+          
+          .container {
+            color: white;
+            text-align: center;
+          }
+           
+           label{
+              display: inline-block;
+              width: 100px;
+            }
+            
+            h2{
+                margin-bottom: 60px;
+            }
+          
+        </style>
+          
+        
+    </head>
+    <body>
+    
+        {% if messages %}
+          
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+            </ul>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        
+            
+         {% endif %}
+    
+        <div class="container">
+            <h2>Actualización de Datos</h2>
+            <form method="post">{% csrf_token %}
+                <div>
+                    {{ form.as_p }}
+                    <input type="submit" value="Save">
+                    <a href="{% url 'muestra' %}">Regresar</a>
+                </div>
+            </form>
+        </div>
+        {% bootstrap_javascript %}
+        <script src="" async defer></script>
+    </body>
+</html>

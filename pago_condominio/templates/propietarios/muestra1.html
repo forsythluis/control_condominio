@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {# cargando la libreria #}
+        {% load bootstrap5 %}
+        
+        {#cargando CSS Bootstrap #}
+        {% bootstrap_css %}
+        
+        {# Archivos #}
+        {% load static %}
+        
+        <style>
+          form{ 
+            margin: 30px 0px 30px 0px;
+          }
+          
+          .table{
+            margin: 50px 0px 50px 0px;
+          
+          }
+          
+          .titulo{
+            text-align: center;
+            margin: 50px 0px 50px 0px;
+          }
+          
+          .enviar{
+            text-align: center;
+            margin: 50px 0px 50px 0px;
+          }
+        
+        </style>
+    </head>
+    <body>
+    
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+               <li class="nav-item">
+                 <a class="nav-link active" aria-current="page" href="{% url 'logout' %}"><h2>Salir</h2></a>
+               </li>
+             </ul>
+          </div>
+        </div>
+      </nav>
+    {% if user.is_authenticated %}
+       {{msg}}
+        <div class = "titulo">
+          <span ><h2>Bienvenido amigo cliente</h2> <h1><strong>{{user.username}} su cédula es {{user.cedula}}</strong></h1></span>
+        </div>
+      
+       <div class = "enviar">
+          <form action = 'mostrar' method = 'POST'>
+            {% csrf_token %}
+              <input type = 'hidden' name = 'cedula' value = '{{user.cedula}}'>
+              <input type = 'submit' class = "btn btn-outline-primary" name = 'enviar' value = 'Consulte sus Datos'>
+              <button type="button" class="btn btn-outline-light">Light</button>
+          </form> 
+       </div>
+      <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Nombre</th>
+              <th>Apartamento</th>
+              <th>Piso</th>
+              <th>Monto</th>
+              <th>Canceló Mes</th>
+              <th>Alicuota</th>          
+            </tr>
+          </thead>
+                
+          <tbody>
+            {% for item in Propietario %}
+            <tr>
+              <td>{{item.cedula}}</td>
+              <td>{{item.nombre}}</td>
+              <td>{{item.apartamento}}</td>
+              <td>{{item.piso}}</td>
+              <td>{{item.monto}}</td>
+              <td>{{item.cancelar}}</td>
+              <td>{{item.alicuota}}</td>
+              <form action = 'pagomuestra' method = 'POST'>
+                  {% csrf_token %}
+                  <input type = 'hidden' name = 'cedula' value = '{{item.cedula}}'>
+                  <input type = 'hidden' name = 'monto' value = '{{item.monto}}'>
+                            
+                  {% if item.monto > 0 and item.cancelar == 0 %}
+                    <td><input type = 'submit' name = 'enviar' value = 'Pagar' class = "btn btn-info"></td>
+                  {% endif %}        
+              </form>              
+            {% endfor %} 
+    {% endif %}   
+                
+            {% bootstrap_javascript %}
+            <script src="" async defer></script>
+    </body>
+</html>
